@@ -39,7 +39,7 @@ Advanced Usage
 
     import Pi7SegPy as Pi7Seg
 
-    Pi7Seg.init(17,27,22,3,8) # Initialize with Data:GPIO17, Clock:GPIO27, Latch:GPIO22, with 3 shift registers (first for active digit selection, others for segment control) and 8 7 segment displays 
+    Pi7Seg.init(17,27,22,2,8) # Initialize with Data:GPIO17, Clock:GPIO27, Latch:GPIO22, with 2 shift registers (first for active digit selection, second for segment control) and 8 7 segment displays 
 
     while True:
         Pi7Seg.show([1,2,3,4,5,6,7,8], [1,2,5]) # Display 12345678 on 8 displays connected to 2 registers with dots enabled on the 1st, 2nd and 5th Digit
