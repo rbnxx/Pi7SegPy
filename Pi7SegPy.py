@@ -53,18 +53,20 @@ def setup():
     if common_cathode:
         for key in available_chars:
             available_chars[key] = ~available_chars[key]
+    shift.init(data, clock, latch, chain)
 
 
 def with_dot(value):
-    return value & ~(1 << 7)
-
-shift.init(data, clock, latch, chain)
+    if common_cathode:
+        return value | 1 << 7
+    else:
+        return value & ~(1 << 7)
 
 
 def show(values, dots=[]):
     values.reverse()
     length = len(values)
-    if length > displays*chain:
+    if length > displays:
         raise ValueError("More Characters than available on displays")
     else:
         for i in range(length):
@@ -72,6 +74,9 @@ def show(values, dots=[]):
                 char = available_chars[values[i]]
                 if i+1 in dots:
                     char = with_dot(char)
-                shift.write(char << 8 | 1 << i)
+                if common_cathode:
+                    shift.write(char << 8 | ((~(1 << displays-1-i)) & 0xff))
+                else:
+                    shift.write(char << 8 | 1 << i)
             except KeyError:
                 raise ValueError("The character cannot be printed on a 7 segment display")
