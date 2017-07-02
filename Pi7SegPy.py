@@ -1,4 +1,5 @@
 import PiShiftPy as shift
+import time
 
 available_chars = {
   0: 0b11000000,
@@ -11,6 +12,16 @@ available_chars = {
   7: 0b11111000,
   8: 0b10000000,
   9: 0b10011000,
+  '0': 0b11000000,
+  '1': 0b11111001,
+  '2': 0b10100100,
+  '3': 0b10110000,
+  '4': 0b10011001,
+  '5': 0b10010010,
+  '6': 0b10000011,
+  '7': 0b11111000,
+  '8': 0b10000000,
+  '9': 0b10011000,
   'A': 0b10001000,
   'b': 0b10000011,
   'C': 0b11000110,
@@ -27,7 +38,12 @@ available_chars = {
   'o': 0b10100011,
   'P': 0b10001100,
   'S': 0b10010010,
-  ' ': 0b11111111
+  'U': 0b11000001,
+  'u': 0b11100011,
+  '-': 0b10111111,
+  "'": 0b11011111,
+  '_': 0b11110111,
+  ' ': 0b11111111,
 }
 
 data = 18
@@ -64,19 +80,19 @@ def with_dot(value):
 
 
 def show(values, dots=[]):
-    values.reverse()
     length = len(values)
     if length > displays:
         raise ValueError("More Characters than available on displays")
     else:
-        for i in range(length):
+        for i in range(length-1, -1, -1):
             try:
                 char = available_chars[values[i]]
                 if i+1 in dots:
                     char = with_dot(char)
                 if common_cathode:
-                    shift.write(char << 8 | ((~(1 << displays-1-i)) & 0xff))
+                    shift.write( (char << 8) | ((~(1 << displays-length+i)) & 0xff))
                 else:
                     shift.write(char << 8 | 1 << i)
+                time.sleep(0.003)
             except KeyError:
                 raise ValueError("The character cannot be printed on a 7 segment display")
